@@ -1,0 +1,19 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: docker-registry:5000/project
+    insecure_registries:
+    - "docker-registry:5000"
+
+inputs:
+- name: project-git
+- name: npm-cache
+
+outputs:
+- name: new-npm-cache
+
+run:
+  path: ci-docker/example/tasks/build/run.sh
