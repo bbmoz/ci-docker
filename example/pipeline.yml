@@ -1,6 +1,6 @@
 ---
 resources:
-- name: project-git
+- name: git
   type: git
   source:
     uri: git@github.com:bbmoz/ci-docker.git
@@ -9,18 +9,18 @@ resources:
 - name: npm-cache
   type: s3
   source:
-    endpoint: minio-storage:9000
+    endpoint: 127.0.0.1:9000
     bucket: npm
-    regex: npm-(.*).zip
+    regexp: npm-(.*).zip
     disable_ssl: true
-    access_key_id: ${MINIO_ACCESS_KEY_ID}
-    secret_access_key: ${MINIO_SECRET_ACCESS_KEY}
+    access_key_id: ((MINIO_ACCESS_KEY))
+    secret_access_key: ((MINIO_SECRET_KEY))
 
 jobs:
 - name: build
   plan:
   - aggregate:
-    - get: project-git
+    - get: git
       trigger: true
     - get: npm-cache
   - task: build
@@ -32,7 +32,7 @@ jobs:
 - name: unit-test
   plan:
   - aggregate:
-    - get: project-git
+    - get: git
       passed:
       - build
     - get: npm-cache
@@ -40,5 +40,3 @@ jobs:
       - build
   - task: unit-test
     file: ci-docker/example/tasks/unit-test/unit-test.yml
-
-# etc

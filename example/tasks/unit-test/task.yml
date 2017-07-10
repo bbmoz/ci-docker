@@ -4,13 +4,14 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: docker-registry:5000/project
+    repository: 127.0.0.1:5000/ci
     insecure_registries:
-    - "docker-registry:5000"
+    - "127.0.0.1:5000"
 
 inputs:
-- name: project-git
+- name: git
 - name: npm-cache
 
 run:
-  path: ci-docker/example/tasks/unit-test/run.sh
+  path: example/tasks/unit-test/run.sh
+  dir: git
